@@ -3,37 +3,37 @@ import requests
 import os
 from bs4 import BeautifulSoup
 
-Lista=[]
+Lista=[] 
 Pastas=[]
 
 
-def Pg_Matriz():
-    Url =  requests.get('http://cpdoc.camaraitaguai.rj.gov.br/images/leis/')
-    EndUrl = 'http://cpdoc.camaraitaguai.rj.gov.br/images/leis/'
+def Pg_Matriz(): #Página inicial do catalogo de Docs a serem baixados 
+    Url =  requests.get('http://cpdoc.camaraitaguai.rj.gov.br/images/leis/') #Página inicial do catalogo de Docs a serem baixados 
+    EndUrl = 'http://cpdoc.camaraitaguai.rj.gov.br/images/leis/' #Url Final a ser buscado as informações
     Busca(Url,EndUrl)
 
-def Busca(Url,EndUrl):
-    soup = BeautifulSoup(Url.text,'html.parser')
-    for i in soup.find_all('a'):
-        if '.pdf' in i.get('href'):
-           Item={}
-           Item["Raiz"]=str(EndUrl[43:])
-           Item["Nome"]=str(i.get('href'))
-           Item['Url']=str(EndUrl+str(i.get('href')))
-           Lista.append(Item)
-        elif '.xls' in i.get('href'):
+def Busca(Url,EndUrl): #Função de busca alteravél
+    soup = BeautifulSoup(Url.text,'html.parser')#Página a Buscar as informações
+    for i in soup.find_all('a'): #para cada a no codigo Html da pagina acima 
+        if '.pdf' in i.get('href'):#se o item tiver .pdf (destinar para baixar)
+           Item={}#cria dic com as descrições do arquivo
+           Item["Raiz"]=str(EndUrl[43:])#Url Raiz
+           Item["Nome"]=str(i.get('href'))#Nome do Arquivo 
+           Item['Url']=str(EndUrl+str(i.get('href')))#Url do Download
+           Lista.append(Item)#adiciona o item a lista de downlodas
+        elif '.xls' in i.get('href'):#se for uma tabela de Excel
             Item = {}
             Item["Raiz"] = str(EndUrl[43:])
             Item["Nome"] = str(i.get('href'))
             Item['Url'] = str(EndUrl + str(i.get('href')))
             Lista.append(Item)
-        elif '/' in i.get('href'):
-            if 'images' in i.get('href'):
+        elif '/' in i.get('href'):#se for uma pasta
+            if 'images' in i.get('href'):#se for a pasta imagens ignora
                 continue
-            else:
+            else:#Caso contrario adiciona a pastas a serem buscadas 
                 Pastas.append(str(i.get('href')))
 
-def Download(Raiz,Nome,Endereco):
+def Download(Raiz,Nome,Endereco):#fução de Download com base no nome. url raiz e endereço 
     #print(Nome, '<<<<')
     if Raiz == 'leis':
         if Nome in os.listdir(os.getcwd() + str(Raiz)):
