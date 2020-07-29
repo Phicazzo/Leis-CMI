@@ -35,18 +35,18 @@ def Busca(Url,EndUrl): #Função de busca alteravél
 
 def Download(Raiz,Nome,Endereco):#fução de Download com base no nome. url raiz e endereço 
     #print(Nome, '<<<<')
-    if Raiz == 'leis':
+    if Raiz == 'leis': #se a pasta raiz for "leis" salava na pasta local do aplicativo
         if Nome in os.listdir(os.getcwd() + str(Raiz)):
             print(Nome,"Ja encontrado")
-        else:
+        else: #se nao se encontrar na pasta realiza o download
             Arquivo = Path(os.getcwd() + str(Raiz + Nome))
             Baixar = requests.get(Endereco)
             Arquivo.write_bytes(Baixar.content)
             print(Nome, Endereco, Raiz + '\n' "Baixado.")
-    else:
+    else: # caso o arquivo esteja em alguma pasta ele destina o arquivo para ela
         if Nome in os.listdir(os.getcwd() + str(Raiz[5:])):
             print(Nome,"Ja encontrado")
-        else:
+        else: #se nao se encontrar na pasta realiza o download
             print(Nome, Endereco, Raiz+'\n' "Baixado.")
             Arquivo = Path(os.getcwd() + str(Raiz[5:] + Nome))
             Baixar = requests.get(Endereco)
@@ -55,7 +55,7 @@ def Download(Raiz,Nome,Endereco):#fução de Download com base no nome. url raiz
 
 Pg_Matriz()
 
-for i in Pastas:
+for i in Pastas: 
     if i[:-1] in os.listdir(os.getcwd()):
         continue
     else:
@@ -63,7 +63,7 @@ for i in Pastas:
         os.mkdir(i)
 
 print("Buscando arquivos...")
-for i in Pastas:
+for i in Pastas: 
     Url = requests.get('http://cpdoc.camaraitaguai.rj.gov.br/images/leis/'+str(i))
     EndUrl='http://cpdoc.camaraitaguai.rj.gov.br/images/leis/'+str(i)
     Busca(Url,EndUrl)
